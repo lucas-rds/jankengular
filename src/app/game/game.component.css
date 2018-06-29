@@ -1,0 +1,9 @@
+
+#joken{
+    width: 100%;
+    height: 100vh;
+
+    background: url('../../assets/background.gif');
+    background-size: cover;
+    background-position: center; 
+}
