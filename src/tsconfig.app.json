@@ -1,6 +1,23 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
+    "paths": {
+      "@models/*": [
+        "./src/joken/models/*"
+      ],
+      "@components/*": [
+        "./src/joken/components/*"
+      ],
+      "@services/*": [
+        "./src/joken/services/*"
+      ],
+      "@types/*": [
+        "./src/joken/types/*"
+      ],
+      "@assets/*": [
+        "./src/assets/*"
+      ],
+    },
     "outDir": "../out-tsc/app",
     "module": "es2015",
     "types": []

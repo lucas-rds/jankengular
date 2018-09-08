@@ -2,6 +2,23 @@
   "compileOnSave": false,
   "compilerOptions": {
     "baseUrl": "./",
+    "paths": {
+      "@models/*": [
+        "./src/joken/models/*"
+      ],
+      "@components/*": [
+        "./src/joken/components/*"
+      ],
+      "@services/*": [
+        "./src/joken/services/*"
+      ],
+      "@types/*": [
+        "./src/joken/types/*"
+      ],
+      "@assets/*": [
+        "./src/assets/*"
+      ],
+    },
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,

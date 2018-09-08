@@ -10,7 +10,7 @@
             <div class="col align-self-center">
               <span>{{room.players.length}}/2 Players</span>
             </div>
-            <div class="col">
+            <div class="col" id="teste">
               <button class="btn btn-lg btn-block btn-primary" (click)="enterRoom($event, room)" [disabled]="room.players.length >= 2">Entrar</button>
             </div>
           </div>

@@ -1,11 +1,11 @@
 import { Component, OnInit, Input } from '@angular/core';
-import Room from '../models/room.model';
-import RoomService from '../services/rooms.service';
+import Room from '@models/room.model';
+import RoomService from '@services/rooms.service';
 
 @Component({
   selector: 'joken-po',
   templateUrl: './game.component.html',
-  styleUrls: ['./game.component.css']
+  styleUrls: ['./game.component.scss']
 })
 export class GameComponent {
 
