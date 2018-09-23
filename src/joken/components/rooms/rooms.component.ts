@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 
 import Room from '@models/room.model';
 import GameSocketService from '@services/game-socket.service';
@@ -15,6 +15,7 @@ export class RoomsComponent implements OnInit, OnDestroy {
 
   private rooms$ = new BehaviorSubject<Room[]>([]);
   private matchRoom: Room = new Room('', []);
+  private gameSocketSubscription: Subscription;
 
   constructor(private matchService: MatchDomService,
     private gameSocketService: GameSocketService,
@@ -38,12 +39,16 @@ export class RoomsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.rooms$.unsubscribe();
+    this.gameSocketSubscription.unsubscribe();
+    this.gameSocketService.disconnect();
   }
 
   updateRooms = (rooms: Room[]) => {
     this.rooms = rooms;
-    this.matchRoom = rooms.find(room => room.id === this.matchRoom.id);
-    this.matchService.updateMatchRoom(this.matchRoom);
+    if (this.matchRoom) {
+      this.matchRoom = rooms.find(room => room.id === this.matchRoom.id);
+      this.matchService.updateMatchRoom(this.matchRoom);
+    }
   }
 
   enterRoom(e: Event, room: Room) {

@@ -1,5 +1,5 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
-import { BehaviorSubject, interval, timer } from 'rxjs';
+import { Component, OnInit, Input, ViewChild, OnDestroy } from '@angular/core';
+import { BehaviorSubject, interval, timer, Observable, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import GameSocketService from '@services/game-socket.service';
 import Match from '@models/match.model';
@@ -10,7 +10,7 @@ import PlayerService from '@services/player.service';
   templateUrl: './match.component.html',
   styleUrls: ['./match.component.scss']
 })
-export class MatchComponent implements OnInit {
+export class MatchComponent implements OnInit, OnDestroy {
 
   @ViewChild('video') video: any;
   private room$ = new BehaviorSubject<any>({});
@@ -20,11 +20,15 @@ export class MatchComponent implements OnInit {
     players: [],
     result: undefined
   };
-  public choiceLabel = '';
   public isMatchRunning = false;
   public gameEnded = false;
   public matchResult;
   public timer = 1;
+  public myChoice;
+  public enemyChoice;
+
+  private onMatchStartedSubscription: Subscription;
+  private playerChoosedSubscription: Subscription;
 
   constructor(private gameSocketService: GameSocketService,
     private playerService: PlayerService) {
@@ -41,8 +45,18 @@ export class MatchComponent implements OnInit {
 
   ngOnInit() {
     this.room$.subscribe(this.waitPlayersToStartMatch);
-    this.gameSocketService.onMatchStarted(this.room).subscribe(this.enableMatchPlay);
-    this.gameSocketService.onPlayerChoosed(this.room).subscribe(this.playerChoosedValue);
+    this.onMatchStartedSubscription = this.gameSocketService.onMatchStarted(this.room).subscribe(this.enableMatchPlay);
+    this.playerChoosedSubscription = this.gameSocketService.onPlayerChoosed(this.room).subscribe(this.playerChoosedValue);
+  }
+
+  ngOnDestroy() {
+    this.room$.unsubscribe();
+    this.onMatchStartedSubscription.unsubscribe();
+    this.playerChoosedSubscription.unsubscribe();
+  }
+
+  getOut() {
+    location.reload();
   }
 
   waitPlayersToStartMatch = (room) => {
@@ -51,16 +65,10 @@ export class MatchComponent implements OnInit {
     }
   }
 
-  playerChoosedValue = (data) => {
-    this.match = data.match;
-    console.log('match ', this.match);
-    console.log('all players ', this.allPlayersChoose());
-
+  playerChoosedValue = ({ match }) => {
+    this.match = match;
     if (this.allPlayersChoose()) {
       this.start();
-      // interval(1000)
-      //   .pipe(takeUntil(timer(4000)))
-      //   .subscribe(t => { this.timer = t + 1; });
     }
   }
 
@@ -68,16 +76,26 @@ export class MatchComponent implements OnInit {
     this.match = match;
   }
 
-  chooseOption(value, label) {
-    const player = this.match.players.find(x => x.id === this.playerService.getSessionPlayer().id);
-    player.choice = value;
+  updateMatchPlayerInfo(match, player) {
+    const playerIndex = match.players.findIndex(x => x.id === this.playerService.getSessionPlayer().id);
+    match.players[playerIndex] = player;
+  }
 
-    this.gameSocketService.emitPlayerChoose(this.playerService.getSessionPlayer(), this.match, value);
-    this.choiceLabel = label;
+  chooseOption(choice, label) {
+    const player = { ...this.playerService.getSessionPlayer(), choice };
+    this.updateMatchPlayerInfo(this.match, player);
+    this.gameSocketService.emitPlayerChoose(player, this.match, choice);
+    this.myChoice = choice;
   }
 
   allPlayersChoose() {
     return this.match ? this.match.players.every(player => !!player.choice) : false;
+  }
+
+  getEnemyChoice() {
+    const myself = this.playerService.getSessionPlayer();
+    const [enemy] = this.match.players.filter(player => player.id !== myself.id);
+    return enemy.choice;
   }
 
   start() {
@@ -88,6 +106,8 @@ export class MatchComponent implements OnInit {
       this.gameEnded = true;
       const player = this.playerService.getSessionPlayer();
       this.matchResult = this.match.result[player.id];
+      this.enemyChoice = this.getEnemyChoice();
+      this.gameSocketService.disconnect();
     }, 4600);
   }
 }

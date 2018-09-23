@@ -18,6 +18,10 @@ export default class SocketService {
         return this.socket;
     }
 
+    disconnect(): void {
+        this.socket.disconnect();
+    }
+
     onMessage(): Observable<any> {
         return new Observable<any>(observer => {
             this.socket.on('message', data => observer.next(data));

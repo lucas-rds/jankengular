@@ -17,6 +17,10 @@ export default class GameSocketService {
         this.socketService.connect();
     }
 
+    disconnect() {
+        this.socketService.disconnect();
+    }
+
     onRoomsUpdate(): Observable<any> {
         return this.socketService.onEvent(Events.ROOM_UPDATE);
     }
@@ -33,8 +37,8 @@ export default class GameSocketService {
         return this.socketService.onEvent(`${Events.MATCH_STARTED}-${room.id}`);
     }
 
-    emitPlayerChoose(player: Player, match: Match, value: number) {
-        this.socketService.emit(Events.PLAYER_CHOOSE_VALUE, { player, match, value });
+    emitPlayerChoose(player: Player, match: Match, choice: number) {
+        this.socketService.emit(Events.PLAYER_CHOOSE_VALUE, { player, match, choice });
     }
 
     onPlayerChoosed(room: Room): Observable<any> {

@@ -6,13 +6,17 @@ import { GameComponent } from '@components/game/game.component';
 import { RoomsComponent } from '@components/rooms/rooms.component';
 import { MatchComponent } from '@components/match/match.component';
 import { HttpClientModule } from '@angular/common/http';
+import { TranslatePipe } from './pipes/translate.pipe';
+import { ChoicePipe } from './pipes/choice.pipe';
 
 @NgModule({
   declarations: [
     JokenComponent,
     GameComponent,
     RoomsComponent,
-    MatchComponent
+    MatchComponent,
+    TranslatePipe,
+    ChoicePipe
   ],
   imports: [
     BrowserModule,

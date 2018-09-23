@@ -14,6 +14,6 @@ export default class RoomService {
     constructor(private http: HttpClient) { }
 
     fetchRooms(): Observable<Room[]> {
-        return this.http.get<Room[]>(ServerConstants.SERVER_ADDRESS+ '/rooms');
+        return this.http.get<Room[]>(ServerConstants.SERVER_ADDRESS + '/rooms');
     }
 }
