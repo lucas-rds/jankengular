@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import RoomService from './services/rooms.service';
-import Room from './models/room.model';
+import SocketService from '@services/socket.service';
 
 @Component({
   selector: 'joken-root',
@@ -10,6 +9,5 @@ import Room from './models/room.model';
 export class JokenComponent {
 
   constructor() {
-
   }
 }

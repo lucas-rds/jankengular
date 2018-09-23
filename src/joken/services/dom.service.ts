@@ -12,7 +12,7 @@ export default class DomService {
         private injector: Injector,
         private applicationReference: ApplicationRef) { }
 
-    addComponent(component: Type<{}>, identifier: string, DOMIdToAppendComponent?: string) {
+    addComponent(component: Type<{}>, identifier: string, DOMIdToAppendComponent: string, data?: object) {
         const componentReference = this.componentFactory
             .resolveComponentFactory(component)
             .create(this.injector);
@@ -23,11 +23,22 @@ export default class DomService {
         this.activeComponents.set(identifier, { componentReference, domElement });
 
         domElement.classList.add(identifier);
-        if (DOMIdToAppendComponent) {
-            document.getElementById(DOMIdToAppendComponent).appendChild(domElement);
-            return;
+        document.getElementById(DOMIdToAppendComponent).appendChild(domElement);
+
+        if (data) {
+            Object.entries(data).forEach(([key, value]) => {
+                componentReference.instance[key] = value;
+            });
         }
-        document.body.appendChild(domElement);
+    }
+
+    updateComponentData(identifier: string, data: object) {
+        const activeComponent = this.activeComponents.get(identifier);
+        if (activeComponent) {
+            Object.entries(data).forEach(([key, value]) => {
+                activeComponent.componentReference.instance[key] = value;
+            });
+        }
     }
 
     removeComponent(identifier: string) {

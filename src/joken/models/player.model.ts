@@ -1,8 +1,10 @@
 
 export default class Player {
-    private name: string;
-
-    constructor(name: string) {
+    id: string;
+    name: string;
+    choice: number = undefined;
+    constructor(id: string, name: string) {
+        this.id = id;
         this.name = name;
     }
 }

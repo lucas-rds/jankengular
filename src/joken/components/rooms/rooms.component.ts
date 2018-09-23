@@ -1,20 +1,26 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 import Room from '@models/room.model';
-import Player from '@models/player.model';
-import MatchService from '@services/match.service';
+import GameSocketService from '@services/game-socket.service';
+import PlayerService from '@services/player.service';
+import MatchDomService from '@services/match-dom.service';
 
 @Component({
   selector: 'joken-rooms',
   templateUrl: './rooms.component.html',
   styleUrls: ['./rooms.component.scss']
 })
-export class RoomsComponent implements OnDestroy {
+export class RoomsComponent implements OnInit, OnDestroy {
 
   private rooms$ = new BehaviorSubject<Room[]>([]);
+  private matchRoom: Room = new Room('', []);
 
-  constructor(private matchService: MatchService) { }
+  constructor(private matchService: MatchDomService,
+    private gameSocketService: GameSocketService,
+    private playerService: PlayerService) {
+
+  }
 
   @Input()
   set rooms(rooms) {
@@ -25,15 +31,26 @@ export class RoomsComponent implements OnDestroy {
     return this.rooms$.getValue();
   }
 
+  ngOnInit() {
+    this.gameSocketService.connect();
+    this.gameSocketService.onRoomsUpdate().subscribe(this.updateRooms);
+  }
+
   ngOnDestroy() {
     this.rooms$.unsubscribe();
   }
 
+  updateRooms = (rooms: Room[]) => {
+    this.rooms = rooms;
+    this.matchRoom = rooms.find(room => room.id === this.matchRoom.id);
+    this.matchService.updateMatchRoom(this.matchRoom);
+  }
+
   enterRoom(e: Event, room: Room) {
-    //TODO: Get user from session or something
-    const loggedUser = new Player('Lucas');
-    room.players.push(loggedUser);
-    this.matchService.startMatch(room);
+    const player = this.playerService.getSessionPlayer();
+    this.matchRoom = room;
+    this.gameSocketService.emitEnteredRoom(room, player);
+    this.matchService.startMatchRoom(room);
   }
 
 }

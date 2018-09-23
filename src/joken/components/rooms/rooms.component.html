@@ -4,13 +4,16 @@
     <div class="col">
       <div class="card">
         <div class="card-body">
-          <img class="card-img-top joken-po-img-title" src="../../assets/joken-title-no-background.png" alt="Card image cap" />
+          <img class="card-img-top joken-po-img-title" src="/assets/joken-title-no-background.png" alt="Card image cap" />
           <h3 class="card-title text-center mt-5">Rooms</h3>
           <div class="row mb-2" *ngFor="let room of rooms">
             <div class="col align-self-center">
+              <span>{{room.name}}</span>
+            </div>
+            <div class="col align-self-center">
               <span>{{room.players.length}}/2 Players</span>
             </div>
-            <div class="col" id="teste">
+            <div class="col">
               <button class="btn btn-lg btn-block btn-primary" (click)="enterRoom($event, room)" [disabled]="room.players.length >= 2">Entrar</button>
             </div>
           </div>

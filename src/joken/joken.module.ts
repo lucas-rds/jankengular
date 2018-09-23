@@ -5,6 +5,7 @@ import { JokenComponent } from './joken.component';
 import { GameComponent } from '@components/game/game.component';
 import { RoomsComponent } from '@components/rooms/rooms.component';
 import { MatchComponent } from '@components/match/match.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { MatchComponent } from '@components/match/match.component';
     MatchComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [JokenComponent],

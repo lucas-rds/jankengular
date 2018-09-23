@@ -1,19 +1,59 @@
 <div id="overlay">
 
-  <div class="modal fade show d-block" id="exampleModal">
-    <div class="modal-dialog">
+  <video #video id="match-video" [hidden]="!isMatchRunning">
+    <source src="/assets/Batman-vs-Superman.mp4" type="video/mp4" />
+    Browser not supported
+  </video>
+
+  <div class="modal fade show d-block">
+    <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Match 1</h5>
-          <button type="button" class="close">
-            <span aria-hidden="true">&times;</span>
-          </button>
+          <h5 class="modal-title">{{ room.name }}</h5>
+          <h5 class="modal-title">{{ room.players.length }}/2</h5>
         </div>
-        <div class="modal-body">
-          TODO: Write match component
+        <div class="modal-body" *ngIf="room.players.length < 2">
+          <div class="row">
+            <div class="col">
+              <h2>Esperando outro jogador...</h2>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-body" *ngIf="gameEnded">
+          <h1>{{matchResult}}</h1>
+        </div>
+
+        <div class="modal-body" *ngIf="room.players.length >= 2 && !gameEnded">
+          <div class="row">
+            <h3 class="col">Sua Jogada: {{ choiceLabel }}</h3>
+          </div>
+          <div class="row" id="match-play-selection">
+            <div class="col">
+              <button class="btn btn-primary item-btn" (click)="chooseOption('rock', 'Pedra')" [disabled]="choiceLabel">
+                <img class="card-img-top joken-po-img-title animated bounce" src="/assets/rock-item.png" alt="Pedra" />
+              </button>
+            </div>
+            <div class="col">
+              <button class="btn btn-primary item-btn bounce" (click)="chooseOption('paper', 'Papel')" [disabled]="choiceLabel">
+                <img class="card-img-top joken-po-img-title animated bounce" src="/assets/paper-item.png" alt="Papel" />
+              </button>
+            </div>
+            <div class="col">
+              <button class="btn btn-primary item-btn bounce" (click)="chooseOption('scissor', 'Tesoura')" [disabled]="choiceLabel">
+                <img class="card-img-top joken-po-img-title animated bounce" src="/assets/scissor-item.png" alt="Tesoura" />
+              </button>
+            </div>
+          </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Sair</button>
+
+          <button *ngIf="room.players.length >= 2" type="button" class="btn btn-lg btn-block btn-primary" disabled>
+            <span *ngIf="!allPlayersChoose()"> Façam suas escolhas... </span>
+            <span *ngIf="timer"> {{timer}} </span>
+          </button>
+
+          <button type="button" class="btn btn-secondary">Sair</button>
         </div>
       </div>
     </div>

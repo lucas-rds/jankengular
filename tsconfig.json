@@ -18,6 +18,9 @@
       "@assets/*": [
         "./src/assets/*"
       ],
+      "@constants/*": [
+        "./src/joken/constants/*"
+      ],
     },
     "outDir": "./dist/out-tsc",
     "sourceMap": true,

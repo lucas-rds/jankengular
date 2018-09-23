@@ -17,6 +17,9 @@
       "@assets/*": [
         "./src/assets/*"
       ],
+      "@constants/*": [
+        "./src/joken/constants/*"
+      ],
     },
     "outDir": "../out-tsc/app",
     "module": "es2015",
