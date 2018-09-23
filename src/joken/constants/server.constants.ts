@@ -1,4 +1,4 @@
 
 export const enum ServerConstants {
-    SERVER_ADDRESS = 'http://jankengularbackend.azurewebsites.net'
+    SERVER_ADDRESS = 'https://jankengularbackend.azurewebsites.net'
 }
