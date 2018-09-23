@@ -1005,7 +1005,7 @@ var RoomService = /** @class */ (function () {
         this.http = http;
     }
     RoomService.prototype.fetchRooms = function () {
-        return this.http.get("http://jankengularbackend.azurewebsites.net" /* SERVER_ADDRESS */ + '/rooms');
+        return this.http.get("https://jankengularbackend.azurewebsites.net" /* SERVER_ADDRESS */ + '/rooms');
     };
     RoomService = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])({
@@ -1049,7 +1049,7 @@ var SocketService = /** @class */ (function () {
     function SocketService() {
     }
     SocketService.prototype.connect = function () {
-        this.socket = socket_io_client__WEBPACK_IMPORTED_MODULE_1__("http://jankengularbackend.azurewebsites.net" /* SERVER_ADDRESS */);
+        this.socket = socket_io_client__WEBPACK_IMPORTED_MODULE_1__("https://jankengularbackend.azurewebsites.net" /* SERVER_ADDRESS */);
         return this.socket;
     };
     SocketService.prototype.disconnect = function () {
